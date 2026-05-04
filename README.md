@@ -21,3 +21,15 @@ Create a `.env` file in the project root:
 
 ```env
 VITE_API_URL=http://localhost:3002
+
+```
+## Deployment
+
+This frontend is deployed with Vercel.
+
+For production, configure the following environment variable in the Vercel project settings:
+
+```env
+VITE_API_URL=https://x-witter-4-growdev.vercel.app
+
+```
