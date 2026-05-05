@@ -23,3 +23,19 @@ export async function apiRequest<T>(
 
   return data;
 }
+
+export function getStoredToken() {
+  return localStorage.getItem("token");
+}
+
+export function getAuthHeaders() {
+  const token = getStoredToken();
+
+  if (!token) {
+    throw new Error("You must sign in first.");
+  }
+
+  return {
+    Authorization: `Bearer ${token}`,
+  };
+}
