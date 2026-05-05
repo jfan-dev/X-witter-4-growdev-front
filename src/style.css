@@ -709,11 +709,225 @@ h3 {
   font-size: 1.5rem;
 }
 
+.profile-panel {
+  padding: 0;
+  overflow: hidden;
+}
+
+.profile-panel-header {
+  padding: 22px 22px 0;
+}
+
+.profile-helper {
+  margin: 0;
+  color: var(--color-muted);
+  font-size: 0.92rem;
+  line-height: 1.6;
+}
+
+.profile-search {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 10px;
+  padding: 18px 22px 22px;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.profile-preview {
+  margin: 0;
+}
+
+.profile-cover {
+  min-height: 92px;
+  background:
+    radial-gradient(circle at 18% 20%, rgba(255, 255, 255, 0.9), transparent 28%),
+    linear-gradient(135deg, rgba(236, 72, 153, 0.9), rgba(139, 92, 246, 0.78));
+}
+
+.profile-avatar-wrap {
+  position: relative;
+  top: 48px;
+  padding-left: 22px;
+}
+
+.profile-avatar {
+  width: 88px;
+  height: 88px;
+  background: #ffffff;
+}
+
+.profile-body {
+  display: grid;
+  gap: 18px;
+  padding: 58px 22px 22px;
+}
+
+.profile-title-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 14px;
+  align-items: flex-start;
+}
+
+.profile-title-row h3 {
+  margin-bottom: 4px;
+  font-size: 1.35rem;
+}
+
+.profile-email,
+.profile-id {
+  margin: 0;
+  color: var(--color-muted);
+  font-size: 0.88rem;
+}
+
+.profile-metrics {
+  grid-template-columns: repeat(3, 1fr);
+}
+
+.profile-actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+}
+
+.profile-lists {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.mini-list,
+.recent-xweets {
+  padding: 14px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  background: rgba(255, 255, 255, 0.52);
+}
+
+.mini-list h4,
+.recent-xweets h4 {
+  margin: 0 0 10px;
+  color: var(--color-heading);
+  font-size: 0.92rem;
+}
+
+.mini-list ul,
+.recent-xweets ul {
+  display: grid;
+  gap: 10px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.mini-list li {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.mini-list img {
+  width: 30px;
+  height: 30px;
+  border-radius: 999px;
+  object-fit: cover;
+}
+
+.mini-list span {
+  color: var(--color-heading);
+  font-size: 0.9rem;
+  font-weight: 800;
+}
+
+.mini-empty {
+  margin: 0;
+  color: var(--color-muted);
+  font-size: 0.88rem;
+}
+
+.recent-xweets li {
+  padding-bottom: 10px;
+  border-bottom: 1px solid rgba(236, 72, 153, 0.12);
+}
+
+.recent-xweets li:last-child {
+  padding-bottom: 0;
+  border-bottom: 0;
+}
+
+.recent-xweets p {
+  margin: 0 0 4px;
+  color: var(--color-heading);
+  line-height: 1.5;
+}
+
+.recent-xweets small {
+  color: var(--color-muted);
+}
+
+.portfolio-footer {
+  display: flex;
+  justify-content: space-between;
+  gap: 24px;
+  align-items: flex-end;
+  margin-top: 24px;
+  padding: 24px 28px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  background: var(--color-surface);
+  box-shadow: var(--shadow-sm);
+  backdrop-filter: blur(18px);
+}
+
+.portfolio-footer h2 {
+  margin-bottom: 8px;
+}
+
+.portfolio-footer p {
+  max-width: 560px;
+  margin: 0;
+  color: var(--color-muted);
+  line-height: 1.6;
+}
+
+.footer-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: flex-end;
+}
+
+.footer-links a {
+  display: inline-flex;
+  min-height: 40px;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--color-border);
+  border-radius: 999px;
+  padding: 9px 14px;
+  color: var(--color-heading);
+  background: rgba(255, 255, 255, 0.68);
+  font-size: 0.9rem;
+  font-weight: 800;
+  text-decoration: none;
+  transition:
+    background 160ms ease,
+    box-shadow 160ms ease,
+    transform 160ms ease;
+}
+
+.footer-links a:hover {
+  background: #ffffff;
+  box-shadow: var(--shadow-sm);
+  transform: translateY(-1px);
+}
+
+
 @media (max-width: 480px) {
   .app-shell {
     width: min(100% - 14px, 1120px);
   }
-
+  
   .app-header,
   .card {
     border-radius: 20px;
@@ -758,7 +972,7 @@ h3 {
   .xweet-author-info {
     align-items: flex-start;
   }
-
+  
   .xweet-avatar {
     width: 42px;
     height: 42px;
@@ -796,6 +1010,22 @@ h3 {
 
   .metrics {
     grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 620px) {
+  .profile-search,
+  .profile-actions,
+  .profile-lists {
+    grid-template-columns: 1fr;
+  }
+
+  .profile-title-row {
+    display: grid;
+  }
+
+  .profile-search .button {
+    width: 100%;
   }
 }
 
@@ -858,6 +1088,19 @@ h3 {
 
   .reply-form .button {
     width: 100%;
+  }
+
+  .portfolio-footer {
+    display: grid;
+    padding: 20px;
+  }
+
+  .footer-links {
+    justify-content: stretch;
+  }
+
+  .footer-links a {
+    flex: 1 1 100%;
   }
 }
 

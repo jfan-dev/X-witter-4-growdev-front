@@ -7,6 +7,10 @@
 
   const apiUrl = import.meta.env.VITE_API_URL;
 
+  const githubUrl = "https://github.com/jfan-dev/X-witter-4-growdev-front";
+  const backendDocsUrl = `${apiUrl}/docs`;
+  const backendHealthUrl = `${apiUrl}/health`;
+
   const email = ref("");
   const password = ref("");
   const message = ref("");
@@ -127,42 +131,50 @@
     error.value = "";
   }
 
-  async function handleFollowUser() {
-    try {
-      error.value = "";
-      message.value = "";
+  async function handleLoadProfile() {
+    clearFeedback();
+    loadingProfile.value = true;
 
+    try {
+      profile.value = await getUserProfile(profileUserId.value);
+    } catch (err) {
+      error.value = getErrorMessage(err, "Failed to load profile");
+    } finally {
+      loadingProfile.value = false;
+    }
+  }
+
+  async function handleFollowUser() {
+    clearFeedback();
+    loadingFollow.value = true;
+
+    try {
       const result = await followUser(profileUserId.value);
 
       message.value = result.message;
       await handleLoadProfile();
+      await loadFeed();
     } catch (err) {
-      error.value = err instanceof Error ? err.message : "Failed to follow user";
+      error.value = getErrorMessage(err, "Failed to follow user");
+    } finally {
+      loadingFollow.value = false;
     }
   }
 
   async function handleUnfollowUser() {
-    try {
-      error.value = "";
-      message.value = "";
+    clearFeedback();
+    loadingUnfollow.value = true;
 
+    try {
       const result = await unfollowUser(profileUserId.value);
 
       message.value = result.message;
       await handleLoadProfile();
+      await loadFeed();
     } catch (err) {
-      error.value = err instanceof Error ? err.message : "Failed to unfollow user";
-    }
-  }
-
-  async function handleLoadProfile() {
-    try {
-      error.value = "";
-      message.value = "";
-
-      profile.value = await getUserProfile(profileUserId.value);
-    } catch (err) {
-      error.value = err instanceof Error ? err.message : "Failed to load profile";
+      error.value = getErrorMessage(err, "Failed to unfollow user");
+    } finally {
+      loadingUnfollow.value = false;
     }
   }
 
@@ -276,6 +288,10 @@
     }
 
     return fallback;
+  }
+
+  function shortId(id: string) {
+    return `${id.slice(0, 8)}...${id.slice(-4)}`;
   }
 </script>
 
@@ -432,13 +448,19 @@
           </p>
         </section>
 
-        <section v-else class="card profile-card">
-          <div>
-            <p class="section-kicker">Profile</p>
-            <h2>User profile</h2>
+        <section v-else class="card profile-panel">
+          <div class="profile-panel-header">
+            <div>
+              <p class="section-kicker">Profile</p>
+              <h2>Explore a user</h2>
+              <p class="profile-helper">
+                Paste a user ID to preview their profile, followers, following users,
+                and recent xweets.
+              </p>
+            </div>
           </div>
 
-          <form class="form-grid" @submit.prevent="handleLoadProfile">
+          <form class="profile-search" @submit.prevent="handleLoadProfile">
             <input
               v-model="profileUserId"
               class="field"
@@ -451,65 +473,132 @@
               class="button button-secondary"
               :disabled="loadingProfile"
             >
-              {{ loadingProfile ? "Loading profile..." : "Load profile" }}
+              {{ loadingProfile ? "Loading..." : "Load" }}
             </button>
           </form>
 
-          <article v-if="profile" class="profile-card">
-            <div class="profile-header">
-              <img
-                :src="profile.profileImage"
-                alt="Profile image"
-                class="avatar"
-              />
-
-              <div>
-                <h3>{{ profile.name }}</h3>
-                <p>{{ profile.email }}</p>
+          <article v-if="profile" class="profile-preview">
+            <header class="profile-cover">
+              <div class="profile-avatar-wrap">
+                <img
+                  :src="profile.profileImage"
+                  :alt="`${profile.name} profile image`"
+                  class="avatar profile-avatar"
+                />
               </div>
-            </div>
+            </header>
 
-            <div class="metrics">
-              <div class="metric">
-                <strong>{{ profile.xweets.length }}</strong>
-                <span>Xweets</span>
-              </div>
+            <div class="profile-body">
+              <div class="profile-title-row">
+                <div>
+                  <h3>{{ profile.name }}</h3>
+                  <p class="profile-email">{{ profile.email }}</p>
+                  <p class="profile-id">ID: {{ shortId(profile.id) }}</p>
+                </div>
 
-              <div class="metric">
-                <strong>{{ profile.followers.length }}</strong>
-                <span>Followers</span>
+                <span class="badge">Profile</span>
               </div>
 
-              <div class="metric">
-                <strong>{{ profile.following.length }}</strong>
-                <span>Following</span>
+              <div class="metrics profile-metrics">
+                <div class="metric">
+                  <strong>{{ profile.xweets.length }}</strong>
+                  <span>Xweets</span>
+                </div>
+
+                <div class="metric">
+                  <strong>{{ profile.followers.length }}</strong>
+                  <span>Followers</span>
+                </div>
+
+                <div class="metric">
+                  <strong>{{ profile.following.length }}</strong>
+                  <span>Following</span>
+                </div>
               </div>
-            </div>
 
-            <div class="button-row">
-              <button
-                type="button"
-                class="button button-primary"
-                :disabled="loadingFollow"
-                @click="handleFollowUser"
-              >
-                {{ loadingFollow ? "Following..." : "Follow" }}
-              </button>
+              <div class="button-row profile-actions">
+                <button
+                  type="button"
+                  class="button button-primary"
+                  :disabled="loadingFollow || loadingUnfollow"
+                  @click="handleFollowUser"
+                >
+                  {{ loadingFollow ? "Following..." : "Follow user" }}
+                </button>
 
-              <button
-                type="button"
-                class="button button-secondary"
-                :disabled="loadingUnfollow"
-                @click="handleUnfollowUser"
-              >
-                {{ loadingUnfollow ? "Unfollowing..." : "Unfollow" }}
-              </button>
+                <button
+                  type="button"
+                  class="button button-secondary"
+                  :disabled="loadingFollow || loadingUnfollow"
+                  @click="handleUnfollowUser"
+                >
+                  {{ loadingUnfollow ? "Unfollowing..." : "Unfollow" }}
+                </button>
+              </div>
+
+              <div class="profile-lists">
+                <section class="mini-list">
+                  <h4>Followers</h4>
+
+                  <p v-if="profile.followers.length === 0" class="mini-empty">
+                    No followers yet.
+                  </p>
+
+                  <ul v-else>
+                    <li v-for="follower in profile.followers.slice(0, 3)" :key="follower.id">
+                      <img
+                        :src="follower.profileImage"
+                        :alt="`${follower.name} profile image`"
+                      />
+                      <span>{{ follower.name }}</span>
+                    </li>
+                  </ul>
+                </section>
+
+                <section class="mini-list">
+                  <h4>Following</h4>
+
+                  <p v-if="profile.following.length === 0" class="mini-empty">
+                    Not following anyone yet.
+                  </p>
+
+                  <ul v-else>
+                    <li v-for="user in profile.following.slice(0, 3)" :key="user.id">
+                      <img
+                        :src="user.profileImage"
+                        :alt="`${user.name} profile image`"
+                      />
+                      <span>{{ user.name }}</span>
+                    </li>
+                  </ul>
+                </section>
+              </div>
+
+              <section class="recent-xweets">
+                <h4>Recent xweets</h4>
+
+                <p v-if="profile.xweets.length === 0" class="mini-empty">
+                  This user has not posted yet.
+                </p>
+
+                <ul v-else>
+                  <li v-for="xweet in profile.xweets.slice(0, 3)" :key="xweet.id">
+                    <p>{{ xweet.content }}</p>
+                    <small>{{ formatDate(xweet.createdAt) }}</small>
+                  </li>
+                </ul>
+              </section>
             </div>
           </article>
 
-          <p v-else class="empty-state">
-            Load a user profile to see their xweets, followers, and following users.
-          </p>
+          <article v-else class="empty-state empty-state-card">
+            <span class="empty-icon">👤</span>
+            <h3>No profile selected</h3>
+            <p>
+              Load a user profile to see their stats, followers, following users, and
+              latest xweets.
+            </p>
+          </article>
         </section>
       </aside>
 
@@ -705,5 +794,29 @@
         </section>
       </section>
     </div>
+    
+    <footer class="portfolio-footer">
+      <div>
+        <p class="section-kicker">Portfolio project</p>
+        <h2>X-uitter Front-end POC</h2>
+        <p>
+          A professional proof of concept consuming the deployed X-uitter REST API.
+        </p>
+      </div>
+
+      <nav class="footer-links" aria-label="Project links">
+        <a :href="githubUrl" target="_blank" rel="noreferrer">
+          GitHub
+        </a>
+
+        <a :href="backendDocsUrl" target="_blank" rel="noreferrer">
+          Swagger Docs
+        </a>
+
+        <a :href="backendHealthUrl" target="_blank" rel="noreferrer">
+          API Health
+        </a>
+      </nav>
+    </footer>
   </main>
 </template>
