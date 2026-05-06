@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import type { FeedXweet } from "../../services/feed";
 
-defineProps<{
+const props = defineProps<{
   xweet: FeedXweet;
   replyContent: string;
   isLiking: boolean;
@@ -9,10 +9,32 @@ defineProps<{
   isReplying: boolean;
 }>();
 
+function handleToggleLike() {
+  if (props.xweet.likedByMe) {
+    emit("unlike", props.xweet.id);
+    return;
+  }
+
+  emit("like", props.xweet.id);
+}
+
+function getLikeButtonLabel() {
+  if (props.isLiking) {
+    return "Liking...";
+  }
+
+  if (props.isUnliking) {
+    return "Removing...";
+  }
+
+  return props.xweet.likedByMe ? "❤️ Liked" : "♡ Like";
+}
+
 const emit = defineEmits<{
   (event: "like", xweetId: string): void;
   (event: "unlike", xweetId: string): void;
   (event: "reply", xweetId: string): void;
+  (event: "open-thread", xweetId: string): void;
   (
     event: "update-reply-content",
     payload: { xweetId: string; content: string }
@@ -79,19 +101,18 @@ function getInputValue(event: Event) {
         <button
           type="button"
           class="icon-button"
-          :disabled="isLiking"
-          @click="emit('like', xweet.id)"
+          :disabled="isLiking || isUnliking"
+          @click="handleToggleLike"
         >
-          {{ isLiking ? "Liking..." : "❤️ Like" }}
+          {{ getLikeButtonLabel() }}
         </button>
-
         <button
           type="button"
           class="icon-button"
-          :disabled="isUnliking"
-          @click="emit('unlike', xweet.id)"
+          @click="emit('open-thread', xweet.id)"
         >
-          {{ isUnliking ? "Removing..." : "♡ Unlike" }}
+          💬 {{ xweet.repliesCount }}
+          {{ xweet.repliesCount === 1 ? "reply" : "replies" }}
         </button>
       </footer>
 

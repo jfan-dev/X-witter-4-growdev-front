@@ -8,6 +8,7 @@ type ProfileUser = {
   name: string;
   email: string;
   profileImage: string | null;
+  isFollowing: boolean;
   xweets: {
     id: string;
     content: string;
@@ -25,7 +26,7 @@ type ProfileUser = {
   }[];
 };
 
-defineProps<{
+const props = defineProps<{
   profile: ProfileUser;
   loadingFollow: boolean;
   loadingUnfollow: boolean;
@@ -35,6 +36,27 @@ const emit = defineEmits<{
   (event: "follow"): void;
   (event: "unfollow"): void;
 }>();
+
+function handleToggleFollow() {
+  if (props.profile.isFollowing) {
+    emit("unfollow");
+    return;
+  }
+
+  emit("follow");
+}
+
+function getFollowButtonLabel() {
+  if (props.loadingFollow) {
+    return "Following...";
+  }
+
+  if (props.loadingUnfollow) {
+    return "Unfollowing...";
+  }
+
+  return props.profile.isFollowing ? "✓ Following" : "Follow";
+}
 </script>
 
 <template>
@@ -68,20 +90,12 @@ const emit = defineEmits<{
       <div class="button-row profile-actions">
         <button
           type="button"
-          class="button button-primary"
-          :disabled="loadingFollow"
-          @click="emit('follow')"
+          class="button"
+          :class="profile.isFollowing ? 'button-secondary' : 'button-primary'"
+          :disabled="loadingFollow || loadingUnfollow"
+          @click="handleToggleFollow"
         >
-          {{ loadingFollow ? "Following..." : "Follow" }}
-        </button>
-
-        <button
-          type="button"
-          class="button button-secondary"
-          :disabled="loadingUnfollow"
-          @click="emit('unfollow')"
-        >
-          {{ loadingUnfollow ? "Unfollowing..." : "Unfollow" }}
+          {{ getFollowButtonLabel() }}
         </button>
       </div>
 

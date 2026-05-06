@@ -19,11 +19,24 @@ export type UserProfile = {
   id: string;
   name: string;
   email: string;
-  profileImage: string;
+  profileImage: string | null;
   createdAt: string;
-  xweets: UserProfileXweet[];
-  followers: UserProfileRelation[];
-  following: UserProfileRelation[];
+  isFollowing: boolean;
+  xweets: {
+    id: string;
+    content: string;
+    createdAt: string;
+  }[];
+  followers: {
+    id: string;
+    name: string;
+    profileImage: string | null;
+  }[];
+  following: {
+    id: string;
+    name: string;
+    profileImage: string | null;
+  }[];
 };
 
 export async function getUserProfile(userId: string) {

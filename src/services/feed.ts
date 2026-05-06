@@ -12,7 +12,13 @@ export type FeedXweet = {
   createdAt: string;
   authorId: string;
   parentId: string | null;
-  author: FeedAuthor;
+  likedByMe: boolean;
+  repliesCount: number;
+  author: {
+    id: string;
+    name: string;
+    profileImage: string | null;
+  };
 };
 
 export async function getFeed() {

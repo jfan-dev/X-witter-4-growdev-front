@@ -17,6 +17,7 @@ const emit = defineEmits<{
   (event: "like", xweetId: string): void;
   (event: "unlike", xweetId: string): void;
   (event: "reply", xweetId: string): void;
+  (event: "open-thread", xweetId: string): void;
   (
     event: "update-reply-content",
     payload: { xweetId: string; content: string }
@@ -71,6 +72,7 @@ const emit = defineEmits<{
         @like="emit('like', $event)"
         @unlike="emit('unlike', $event)"
         @reply="emit('reply', $event)"
+        @open-thread="emit('open-thread', $event)"
         @update-reply-content="emit('update-reply-content', $event)"
       />
     </ul>
