@@ -3,6 +3,7 @@ import ProfilePanelHeader from "./ProfilePanelHeader.vue";
 import ProfileSearchForm from "./ProfileSearchForm.vue";
 import UserSearchResults from "./UserSearchResults.vue";
 import ProfilePreview from "./ProfilePreview.vue";
+import type { UserProfile } from "../../services/users";
 
 type UserSearchResult = {
   id: string;
@@ -11,33 +12,11 @@ type UserSearchResult = {
   profileImage: string | null;
 };
 
-type ProfileUser = {
-  id: string;
-  name: string;
-  email: string;
-  profileImage: string | null;
-  xweets: {
-    id: string;
-    content: string;
-    createdAt: string;
-  }[];
-  followers: {
-    id: string;
-    name: string;
-    profileImage: string | null;
-  }[];
-  following: {
-    id: string;
-    name: string;
-    profileImage: string | null;
-  }[];
-};
-
 defineProps<{
   searchQuery: string;
   loadingProfile: boolean;
   searchResults: UserSearchResult[];
-  profile: ProfileUser | null;
+  profile: UserProfile | null;
   loadingFollow: boolean;
   loadingUnfollow: boolean;
 }>();
