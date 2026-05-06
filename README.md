@@ -241,6 +241,42 @@ VITE_API_URL=https://x-witter-4-growdev.vercel.app/
 - The `.env` file stores environment-specific configuration and should not be committed.
 - The solution is to commit `.env.example` and configure the real variables locally and in Vercel.
 
+### Vercel SPA Route Refresh Fix
+
+This project uses Vue Router to manage frontend routes such as:
+
+```txt
+/app
+/profile
+/explore
+```
+
+These routes work normally when navigating inside the application. However, when refreshing the page directly on one of these routes in production, Vercel may return:
+
+```txt
+404: NOT_FOUND
+Code: NOT_FOUND
+```
+
+This happens because the frontend is a Single Page Application. The route `/app` exists only inside Vue Router, not as a real file or server route on Vercel. When the browser refreshes the page, Vercel tries to load `/app` directly from the server and cannot find it.
+
+To solve this, the project uses a `vercel.json` file in the frontend root folder:
+
+```json
+{
+  "rewrites": [
+    {
+      "source": "/(.*)",
+      "destination": "/index.html"
+    }
+  ]
+}
+```
+
+This configuration redirects all frontend requests back to `index.html`, allowing Vue Router to handle the correct page after the application loads.
+
+After adding this file, refreshes on frontend routes work correctly in production.
+
 ## 🚀 Deployment
 
 The frontend can be deployed on **Vercel**.
