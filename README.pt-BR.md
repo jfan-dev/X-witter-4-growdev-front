@@ -10,6 +10,16 @@ Esta aplicação consome a **X-uitter API** e fornece uma interface para autenti
 
 O projeto foi construído como uma prova de conceito frontend para o MVP backend existente, usando uma estrutura simples e de fácil manutenção organizada em **components**, **pages**, **composables**, **router**, **services**, **config** e **utils**.
 
+### Links do Projeto
+
+| Recurso | Link |
+|---|---|
+| Repositório Frontend | [GitHub](https://github.com/jfan-dev/X-witter-4-growdev-front) |
+| Deploy Frontend | [Vercel](https://x-witter-4-growdev-front.vercel.app/) |
+| Repositório Backend | [GitHub](https://github.com/jfan-dev/X-witter-4-growdev) |
+| Deploy Backend | [Vercel](https://x-witter-4-growdev.vercel.app/) |
+| Documentação Swagger Backend | [Swagger](https://x-witter-4-growdev.vercel.app/docs) |
+
 ## 🌐 Pré-requisitos para executar o projeto
 
 - Frontend: **Vue.js 3 + TypeScript**
@@ -271,18 +281,6 @@ VITE_API_URL=https://x-witter-4-growdev.vercel.app
 - [ ] Testar login em produção
 - [ ] Testar requisições autenticadas em produção
 - [ ] Adicionar o link do deploy frontend neste README
-
-### Links do Projeto
-
-| Recurso | Link |
-|---|---|
-| Repositório Frontend | [GitHub](https://github.com/jfan-dev/X-witter-4-growdev-front) |
-| Deploy Frontend | [Vercel](https://x-witter-4-growdev-front.vercel.app/) |
-| Repositório Backend | [GitHub](https://github.com/jfan-dev/X-witter-4-growdev) |
-| Deploy Backend | [Vercel](https://x-witter-4-growdev.vercel.app/) |
-| Documentação Swagger Backend | [Swagger](https://x-witter-4-growdev.vercel.app/docs) |
-
-> Se a URL do repositório frontend for diferente, atualize o link acima.
 
 ## ✅ Status da POC / MVP
 
