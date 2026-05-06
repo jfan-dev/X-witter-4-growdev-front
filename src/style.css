@@ -306,6 +306,33 @@ h3 {
   gap: 14px;
 }
 
+.mini-logged-profile {
+  display: grid;
+  gap: 14px;
+}
+
+.mini-logged-profile-body {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.mini-logged-avatar {
+  width: 64px;
+  height: 64px;
+  flex: 0 0 auto;
+}
+
+.mini-logged-profile h2 {
+  margin-bottom: 4px;
+}
+
+.mini-logged-profile p {
+  margin: 0;
+  color: var(--color-muted);
+  font-size: 0.9rem;
+}
+
 .avatar {
   width: 72px;
   height: 72px;

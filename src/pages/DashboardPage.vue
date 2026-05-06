@@ -8,16 +8,20 @@ import XweetComposer from "../components/feed/XweetComposer.vue";
 import FeedPanel from "../components/feed/FeedPanel.vue";
 import ProfilePanel from "../components/profile/ProfilePanel.vue";
 
+import { useAuth } from "../composables/useAuth";
 import { useFeed } from "../composables/useFeed";
 import { useFeedback } from "../composables/useFeedback";
 import { useXweetActions } from "../composables/useXweetActions";
 import { useXweetState } from "../composables/useXweetState";
 import { useProfileActions } from "../composables/useProfileActions";
 import { useProfileState } from "../composables/useProfileState";
+import MiniLoggedProfile from "../components/profile/MiniLoggedProfile.vue";
 
 import { getErrorMessage } from "../utils/getErrorMessage";
 
 const router = useRouter();
+
+const { currentUser } = useAuth();
 
 function handleOpenThread(xweetId: string) {
   router.push(`/app/xweets/${xweetId}`);
@@ -271,6 +275,11 @@ onMounted(async () => {
 
   <AppMainGrid>
     <template #sidebar>
+      <MiniLoggedProfile
+        v-if="currentUser"
+        :user="currentUser"
+      />
+
       <ProfilePanel
         v-model:search-query="profileSearchQuery"
         :loading-profile="loadingProfile"
@@ -283,31 +292,33 @@ onMounted(async () => {
         @follow="handleFollowUser"
         @unfollow="handleUnfollowUser"
       />
-
-      <XweetComposer
-        v-model="newXweetContent"
-        :loading="loadingCreateXweet"
-        @submit="handleCreateXweet"
-      />
     </template>
 
     <template #content>
-      <FeedPanel
-        :feed="feed"
-        :loading-feed="loadingFeed"
-        :reply-content-by-xweet-id="replyContentByXweetId"
-        :active-like-xweet-id="activeLikeXweetId"
-        :active-unlike-xweet-id="activeUnlikeXweetId"
-        :active-reply-xweet-id="activeReplyXweetId"
-        @refresh="handleRefreshFeed"
-        @like="handleLikeXweet"
-        @unlike="handleUnlikeXweet"
-        @reply="handleReplyToXweet"
-        @open-thread="handleOpenThread"
-        @update-reply-content="
-          replyContentByXweetId[$event.xweetId] = $event.content
-        "
-      />
+      <div class="stack">
+        <XweetComposer
+          v-model="newXweetContent"
+          :loading="loadingCreateXweet"
+          @submit="handleCreateXweet"
+        />
+
+        <FeedPanel
+          :feed="feed"
+          :loading-feed="loadingFeed"
+          :reply-content-by-xweet-id="replyContentByXweetId"
+          :active-like-xweet-id="activeLikeXweetId"
+          :active-unlike-xweet-id="activeUnlikeXweetId"
+          :active-reply-xweet-id="activeReplyXweetId"
+          @refresh="handleRefreshFeed"
+          @like="handleLikeXweet"
+          @unlike="handleUnlikeXweet"
+          @reply="handleReplyToXweet"
+          @open-thread="handleOpenThread"
+          @update-reply-content="
+            replyContentByXweetId[$event.xweetId] = $event.content
+          "
+        />
+      </div>
     </template>
   </AppMainGrid>
 </template>

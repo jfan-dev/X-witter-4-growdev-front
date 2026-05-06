@@ -12,19 +12,27 @@ export type SigninInput = {
   password: string;
 };
 
-export type AuthResponse = {
+export type LoggedUser = {
+  id: string;
+  name: string;
+  email: string;
+  profileImage: string | null;
+};
+
+export type SigninResponse = {
   token: string;
+  user: LoggedUser;
 };
 
 export async function signup(input: SignupInput) {
-  return apiRequest("/auth/signup", {
+  return apiRequest<LoggedUser>("/auth/signup", {
     method: "POST",
     body: JSON.stringify(input),
   });
 }
 
 export async function signin(input: SigninInput) {
-  return apiRequest<AuthResponse>("/auth/signin", {
+  return apiRequest<SigninResponse>("/auth/signin", {
     method: "POST",
     body: JSON.stringify(input),
   });

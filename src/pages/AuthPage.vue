@@ -77,7 +77,7 @@ async function handleSignin() {
       password: password.value,
     });
 
-    saveSession(result.token);
+    saveSession(result.token, result.user);
 
     await router.push("/app");
   } catch (err) {
